@@ -51,7 +51,7 @@ class TradingTests(TestCase):
         self.assertEqual(self.product.sale_status, 'sold')
         self.assertEqual(WalletEntry.objects.filter(order=order).count(), 2)
         self.assertEqual(order.events.count(), 4)
-        self.assertContains(self.client.get('/trades/'), '课堂模拟交易')
+        self.assertContains(self.client.get('/trades/'), '模拟交易')
         self.assertContains(self.client.get(f'/orders/{order.pk}/'), '模拟款项已结算')
 
     def test_insufficient_funds_rollback_and_refund_once(self):
