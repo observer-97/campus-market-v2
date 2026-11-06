@@ -4,8 +4,6 @@
 
 ## 最新完整上线版 v2
 
-老师要求整个应用完整部署到 Vercel，前后端都上线，关闭本机后仍可访问，刷新和换设备后数据保留。此项目的前端是 Django 模板与 CSS，后端是 Django WSGI；二者和分类模型接口一起部署到 Vercel，并连接云端 PostgreSQL（含图片存储），无需单独在本机运行 app.py 或保持终端打开。
-
 - 新版压缩包：`交付包/完整上线版v2/campus-market-vercel-fullstack-v2.zip`，请不要混用旧包。
 - 部署后管理员入口：`/admin/deployment-check/`，检查真实后端、数据库、模型、CSS，并保存持久化验收标记。
 - 公开健康接口：`/api/health/`；只有 Vercel Production + PostgreSQL + 加密连接 + 数据库图片及模型齐全时，`cloud_ready` 才为 true。
@@ -15,7 +13,7 @@
 
 ## GitHub + Vercel 云端配置（2026-11-06）
 
-上传前请先阅读 [零终端部署指南](docs/VERCEL部署指南.md)。老师访问已部署的 HTTPS 地址即可，无需 Python 或终端。代码已适配，尚未代替项目所有者执行真实部署，不能把本地验证视为公网验收。
+上传前请先阅读 [零终端部署指南](docs/VERCEL部署指南.md)。访问已部署的 HTTPS 地址即可，无需 Python 或终端。代码已适配，尚未代替项目所有者执行真实部署，不能把本地验证视为公网验收。
 
 - 本地继续使用 SQLite；Vercel 强制使用 `DATABASE_URL` 指定的 PostgreSQL，禁止临时 SQLite。
 - 在 Vercel 导入本仓库，Framework 选 Django，Python 3.12，构建命令 `python build.py`。
@@ -37,7 +35,7 @@
 | 买家 | demo_buyer | CampusTrade2026! |
 | 管理员 | 由你设置的 CAMPUS_ADMIN_USERNAME | 由你私下设置，不公开 |
 
-本仓库使用标准 `requirements.txt`；另附 `requirement.txt` 指向同一清单以对应老师截图中的命名。课程材料及待填写提交清单位于 `课程展示材料/`，切勿将管理员密码放入提交表单。
+本仓库使用标准 `requirements.txt`
 
 ## 校区、私信与模拟托管交易
 
