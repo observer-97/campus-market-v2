@@ -14,6 +14,7 @@ urlpatterns = [
     path('trades/grant/', trade_views.grant, name='grant'),
     path('products/<int:pk>/chat/', trade_views.start_chat, name='start_chat'),
     path('chats/<int:pk>/', trade_views.chat, name='chat'),
+    path('chats/<int:pk>/meeting/', trade_views.share_meeting, name='share_meeting'),
     path('chats/<int:pk>/propose/', trade_views.propose_order, name='propose_order'),
     path('orders/<int:pk>/', trade_views.order_detail, name='order'),
     path('orders/<int:pk>/action/', trade_views.act_order, name='act_order'),

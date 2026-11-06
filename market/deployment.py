@@ -13,7 +13,7 @@ from .ml import classify
 from .models import Product, StoredImage, CATEGORIES
 from .storage import DatabaseImageStorage
 
-RELEASE = '2026-11-06-fullstack-v2'
+RELEASE = '2026-11-06-offline-trading-v3'
 PROBE_NAME = '上线持久化验收标记'
 
 

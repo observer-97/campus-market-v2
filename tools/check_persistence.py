@@ -40,7 +40,7 @@ def main():
     from django.core.files.uploadedfile import SimpleUploadedFile
     from django.core.management import call_command
     from django.test import Client
-    from market.models import Product, Profile, Favorite, ChatMessage, DemoOrder
+    from market.models import Product, Profile, Favorite, ChatMessage
     from market.ml import classify
     state_path = Path(args.state)
     def new_client():
@@ -78,23 +78,17 @@ def main():
         assert product.status == 'approved'
         assert post(buyer, f'/products/{product.pk}/favorite/').status_code == 302
         chat = post(buyer, f'/products/{product.pk}/chat/')['Location']
-        assert post(buyer, chat, {'body': '请在将军路南区操场北入口面交，课堂验收消息'}).status_code == 302
-        assert post(buyer, chat + 'propose/', {'campus': 'jiang', 'meeting_place': '将军路南区操场北入口'}).status_code == 302
-        order = DemoOrder.objects.get(product=product)
-        assert post(seller, f'/orders/{order.pk}/action/', {'action': 'accept'}).status_code == 302
-        assert post(buyer, '/trades/grant/').status_code == 302
-        assert post(buyer, f'/orders/{order.pk}/action/', {'action': 'pay'}).status_code == 302
-        order.refresh_from_db()
-        assert order.state == 'paid', 'Simulated payment failed'
+        assert post(buyer, chat, {'body': '请在将军路南区操场北入口面交，功能验证消息'}).status_code == 302
+        assert post(buyer, chat + 'meeting/', {'campus': 'jiang', 'meeting_place': '将军路南区操场北入口'}).status_code == 302
         assert post(manager, '/admin/deployment-check/', {'action': 'save_probe'}).status_code == 302
-        state = {'product': product.pk, 'order': order.pk, 'chat': chat,
+        state = {'product': product.pk, 'chat': chat,
                  'title': product.title, 'image_url': product.image.url, 'image_sha256': hashlib.sha256(image.getvalue()).hexdigest(),
                  'seller_cookie': seller.cookies[settings.SESSION_COOKIE_NAME].value,
                  'buyer_cookie': buyer.cookies[settings.SESSION_COOKIE_NAME].value,
                  'admin_cookie': manager.cookies[settings.SESSION_COOKIE_NAME].value}
         state_path.parent.mkdir(parents=True, exist_ok=True)
         state_path.write_text(json.dumps(state, ensure_ascii=False), encoding='utf-8')
-        print('WRITE PASS: registered, uploaded, moderated, favorited, chatted, paid and saved database marker')
+        print('WRITE PASS: registered, uploaded, moderated, favorited, chatted, shared meeting place and saved database marker')
     else:
         state = json.loads(state_path.read_text(encoding='utf-8'))
         seller, buyer, manager = new_client(), new_client(), new_client()
@@ -106,14 +100,12 @@ def main():
         image = new_client().get(state['image_url'])
         assert image.status_code == 200 and hashlib.sha256(image.content).hexdigest() == state['image_sha256']
         assert '验收标记' in manager.get('/admin/deployment-check/').content.decode()
-        assert DemoOrder.objects.get(pk=state['order']).state == 'paid'
         title, description = '羽毛球拍', '体育课训练使用，附拍套，线床完整'
         response = post(buyer, '/api/predict/', {'title': title, 'description': description}, content_type='application/json')
         assert response.status_code == 200 and response.json()['category'] == classify(title, description)[0]
-        assert post(buyer, f'/orders/{state["order"]}/action/', {'action': 'confirm', 'received': 'on'}).status_code == 302
-        assert DemoOrder.objects.get(pk=state['order']).state == 'completed'
+        assert post(seller, f'/products/{state["product"]}/state/', {'state': 'sold'}).status_code == 302
         assert Product.objects.get(pk=state['product']).sale_status == 'sold'
-        print('READ PASS: separate process reused sessions and persisted image/favorite/chat/escrow; real prediction and receipt completed')
+        print('READ PASS: separate process reused sessions and persisted image/favorite/chat/location; real prediction and seller sold history completed')
 
 
 if __name__ == '__main__':

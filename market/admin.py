@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.urls import reverse
 from .forms import ProductForm
-from .models import Product, Favorite, DemoOrder, DemoWallet, WalletEntry, OrderEvent, Profile, ProductReport
+from .models import Product, Favorite, DemoOrder, Profile, ProductReport
 
 admin.site.site_header = '青禾集 · 数据管理后台'
 admin.site.site_title = '青禾集管理'
@@ -26,8 +26,6 @@ class AdminProductForm(ProductForm):
         data = super().clean()
         if self.instance.pk:
             current = Product.objects.get(pk=self.instance.pk)
-            if current.orders.filter(state__in=['accepted', 'paid']).exists() and any(name in self.changed_data for name in ['owner', 'title', 'description', 'price', 'category', 'contact', 'image', 'status']):
-                raise forms.ValidationError('商品有进行中的交易，请先由双方完成或取消交易，后台不能直接改动商品。')
             if data.get('review_revision') != current.revision:
                 raise forms.ValidationError('卖家已提交新版本，请刷新页面重新查看商品后再审核。')
         reason = (data.get('rejection_reason') or '').strip()
@@ -100,19 +98,6 @@ class DemoOrderAdmin(ReadOnlySimulationAdmin):
     list_display = ['id', 'title', 'buyer', 'seller', 'state', 'amount', 'campus', 'created_at']
     list_filter = ['state', 'campus']
     search_fields = ['title', 'buyer__username', 'seller__username']
-
-@admin.register(DemoWallet)
-class DemoWalletAdmin(ReadOnlySimulationAdmin):
-    list_display = ['user', 'balance', 'grant_claimed']
-
-@admin.register(WalletEntry)
-class WalletEntryAdmin(ReadOnlySimulationAdmin):
-    list_display = ['id', 'user', 'order', 'kind', 'amount', 'created_at']
-    list_filter = ['kind']
-
-@admin.register(OrderEvent)
-class OrderEventAdmin(ReadOnlySimulationAdmin):
-    list_display = ['order', 'actor', 'state', 'created_at']
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

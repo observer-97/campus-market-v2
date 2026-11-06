@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from .forms import ProductForm, AccountSettingsForm, SearchForm, ReportForm
 from .models import Product, Favorite, Profile, ProductReport, CATEGORIES, CAMPUSES
-from .trading import reserved
 from .ml import classify
 
 def listing(request, products, heading, personal=False, **extra):
@@ -21,7 +20,7 @@ def listing(request, products, heading, personal=False, **extra):
     return render(request, 'listing.html', {'page': Paginator(products, 12).get_page(request.GET.get('page')), 'heading': heading, 'categories': CATEGORIES, 'personal': personal, 'filter_query': query.urlencode(), **extra})
 
 def index(request):
-    products = Product.objects.select_related('owner').filter(status=Product.Status.APPROVED, sale_status=Product.SaleStatus.AVAILABLE).exclude(orders__state__in=['accepted', 'paid'])
+    products = Product.objects.select_related('owner').filter(status=Product.Status.APPROVED, sale_status=Product.SaleStatus.AVAILABLE)
     form = SearchForm(request.GET or {'sort': 'newest'})
     if form.is_valid():
         values = form.cleaned_data
@@ -74,9 +73,6 @@ def publish(request):
 @transaction.atomic
 def edit(request, pk):
     product = get_object_or_404(Product.objects.select_for_update(), pk=pk, owner=request.user)
-    if reserved(product):
-        messages.error(request, '商品有待付款或已付款交易，请先完成或取消交易，再修改商品。')
-        return redirect('detail', pk=pk)
     form = ProductForm(request.POST if request.method == 'POST' else None, request.FILES or None, instance=product)
     if request.method == 'POST' and form.is_valid():
         product = form.save(commit=False)
@@ -101,7 +97,7 @@ def detail(request, pk):
     product = get_object_or_404(visible_products(request), pk=pk)
     saved = request.user.is_authenticated and Favorite.objects.filter(user=request.user, product=product).exists()
     seller_profile = Profile.objects.filter(user=product.owner).first()
-    return render(request, 'detail.html', {'product': product, 'saved': saved, 'seller_profile': seller_profile, 'reserved': reserved(product)})
+    return render(request, 'detail.html', {'product': product, 'saved': saved, 'seller_profile': seller_profile})
 
 @login_required
 def mine(request):
@@ -116,9 +112,6 @@ def favorites(request):
 @transaction.atomic
 def delete(request, pk):
     product = get_object_or_404(Product.objects.select_for_update(), pk=pk, owner=request.user)
-    if reserved(product):
-        messages.error(request, '商品有进行中的交易，请先完成或取消交易。')
-        return redirect('detail', pk=pk)
     product.sale_status = Product.SaleStatus.OFFLINE
     product.save()
     messages.success(request, '商品已下架，历史记录已保留。')
@@ -205,9 +198,6 @@ def profile_settings(request):
 @transaction.atomic
 def sale_state(request, pk):
     product = get_object_or_404(Product.objects.select_for_update(), pk=pk, owner=request.user)
-    if reserved(product):
-        messages.error(request, '商品有进行中的交易，请先完成或取消交易。')
-        return redirect('center')
     target = request.POST.get('state')
     if target not in dict(Product.SaleStatus.choices):
         return JsonResponse({'error': '无效交易状态。'}, status=400)
