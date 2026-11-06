@@ -98,3 +98,11 @@ python manage.py runserver 127.0.0.1:8001
 ```
 
 本地默认使用 SQLite；Vercel 环境必须使用 PostgreSQL。Windows 也可通过 `run.ps1` 调用已配置的 Python 3.12。本地开发服务器不用于公网部署。
+
+## 当前版本与展示材料
+
+当前为线下交易版 v3：浏览商品 → 私信约时间地点 → 线下验货并自行付款 → 卖家标记已售出。
+
+新增验证记录见 [新版浏览器验收](docs/offline-v3-browser-verification.json)；旧版模拟支付验证仅作为历史记录。
+
+最新图文说明书与设计思路由 `tools/build_offline_documents.py` 和 `tools/render_offline_documents.cjs` 生成到 `output/pdf/`；后者需本机 Playwright/Chrome 与 PDF.js 渲染环境，属于材料生成工具，不是网站运行依赖。提交包保存于部署者本机 `交付包/线下交易版v3/`。旧版 `课程展示材料/` 和 v2 压缩包对应早期功能，不能替代本版材料。
