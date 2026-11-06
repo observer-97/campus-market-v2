@@ -7,12 +7,12 @@
 {% if marker %}<p>最近标记：<strong id="saved-marker">{{ marker.change_message }}</strong><br>保存时间：{{ marker.action_time|date:'Y-m-d H:i:s T' }}</p>{% else %}<p id="saved-marker">尚未保存验收标记。</p>{% endif %}
 <form method="post">{% csrf_token %}<input type="hidden" name="action" value="save_probe"><input type="submit" class="default" value="保存新的验收标记"></form>
 <p>保存后刷新应看到相同标记。关闭本机服务，在另一台电脑或手机打开正式网址，用同一个管理员登录本页，核对标记；在 Vercel 重新部署后再次核对。此标记写入 Django 管理操作日志，不创建或覆盖业务商品。</p>
-<h2>老师验收前操作一遍</h2><ol>
+<h2>发布前操作一遍</h2><ol>
 <li>退出 Vercel 账号，用无痕窗口打开正式首页，不能出现 Vercel 保护登录页，也不能要求启动 app.py。</li>
 <li>注册新账号，设置校区，发布带图片的商品；刷新后仍在“我的发布”。</li>
 <li>管理员审核通过；另一账号可搜索、按校区筛选、收藏、私聊，协商具体地点。</li>
 <li>点击智能分类，看到保存模型给出的实际建议；完成模拟付款和确认收货。</li>
 <li>关掉本机终端，更换设备访问；重新部署后确认商品、图片、私信和订单仍在。</li>
-</ol><p>网页付款始终为课堂模拟。检查结果不证明任何真实资金托管。</p>
+</ol><p>网页付款始终为模拟记录。检查结果不证明任何真实资金托管。</p>
 <p><a href="{% url 'index' %}">打开正式首页</a> · <a href="{% url 'health' %}">公开后端健康检查</a> · <a href="{% url 'admin:index' %}">返回管理后台</a></p></div>
 <script>fetch('{% static "app.css" %}',{cache:'no-store'}).then(async r=>{const text=await r.text();document.getElementById('css-check').textContent=r.ok&&r.headers.get('content-type')?.includes('text/css')&&text.includes('body')?'通过':'未通过，请检查静态文件部署';}).catch(()=>{document.getElementById('css-check').textContent='未通过，请检查网络或静态文件部署';});</script>{% endblock %}

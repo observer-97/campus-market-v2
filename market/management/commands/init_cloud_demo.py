@@ -14,7 +14,7 @@ from market.models import Product, Profile
 
 
 class Command(BaseCommand):
-    help = '构建阶段初始化独立的云端课堂演示；不导入本机用户、不覆盖已有密码和商品。'
+    help = '构建阶段初始化独立的云端功能演示演示；不导入本机用户、不覆盖已有密码和商品。'
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -43,7 +43,7 @@ class Command(BaseCommand):
         call_command('init_trade_demo', stdout=self.stdout)
         for name, campus in [('demo_student', 'tian'), ('demo_seller', 'jiang'), ('demo_buyer', 'ming')]:
             Profile.objects.get_or_create(user=User.objects.get(username=name), defaults={
-                'campus': campus, 'is_public': name != 'demo_buyer', 'bio': '公开课堂演示账号，请勿填写真实隐私。'})
+                'campus': campus, 'is_public': name != 'demo_buyer', 'bio': '公开功能演示演示账号，请勿填写真实隐私。'})
         count = 0
         for product in Product.objects.exclude(pk__in=existing).filter(owner__username__in=['demo_student', 'demo_seller']):
             # Only new, explicitly marked sample products are pre-approved by this bootstrap.

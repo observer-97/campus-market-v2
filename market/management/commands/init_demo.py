@@ -9,11 +9,11 @@ class Command(BaseCommand):
         if created:
             user.set_password('CampusDemo2026!')
             user.save()
-            self.stdout.write('新建演示账号 demo_student / CampusDemo2026!（仅限课堂模拟，请勿填写真实隐私）')
+            self.stdout.write('新建演示账号 demo_student / CampusDemo2026!（仅限功能演示模拟，请勿填写真实隐私）')
         else:
             self.stdout.write('账号已存在，保留原密码及数据。')
         examples = [
-            ('同济高等数学 · 上下册', '【演示商品】课本保存完好，有少量课堂笔记。希望能帮到下一位同学。', '28.00', 'study'),
+            ('同济高等数学 · 上下册', '【演示商品】课本保存完好，有少量功能演示笔记。希望能帮到下一位同学。', '28.00', 'study'),
             ('无线降噪蓝牙耳机', '【演示商品】通勤和自习用，充电盒齐全。左耳外壳有轻微划痕。', '89.00', 'digital'),
             ('入门羽毛球拍一对', '【演示商品】社团活动用过，线床完整，附拍套，适合日常锻炼。', '45.00', 'sports'),
             ('宿舍透明收纳箱', '【演示商品】搬宿舍转让，带盖可叠放，放书和衣物都方便。', '15.00', 'daily'),
