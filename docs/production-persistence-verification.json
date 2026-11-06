@@ -1,0 +1,24 @@
+{
+  "url": "https://campus-market-v2-six.vercel.app",
+  "startedAt": "2026-11-06T11:15:25.349Z",
+  "checks": [
+    "Anonymous production home after redeploy",
+    "Production backend, PostgreSQL, TLS and model healthy",
+    "Mobile listing images loaded from database",
+    "Mobile home has no horizontal overflow",
+    "Sold listing history survives redeployment",
+    "Uploaded image unchanged after redeployment",
+    "Fresh login after redeployment",
+    "Favorite survives redeployment",
+    "Private messages and meeting place survive redeployment",
+    "Settled order survives redeployment",
+    "Mobile order has no horizontal overflow",
+    "Fresh login after redeployment",
+    "Database marker unchanged after redeployment",
+    "Admin cloud readiness passes after redeployment"
+  ],
+  "physicalDeviceCheck": false,
+  "release": "2026-11-06-fullstack-v2",
+  "completedAt": "2026-11-06T11:15:36.272Z",
+  "passed": true
+}
