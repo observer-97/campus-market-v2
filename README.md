@@ -2,19 +2,9 @@
 
 校园二手交易课程网页，Django + scikit-learn，支持电脑和手机。四分类及发布、收藏业务参考早期 Android 工程，运行此项目不依赖 Android Studio，也不需要原 Android 资料。
 
-## 最新完整上线版 v2
-
-- 新版压缩包：`交付包/完整上线版v2/campus-market-vercel-fullstack-v2.zip`，请不要混用旧包。
-- 部署后管理员入口：`/admin/deployment-check/`，检查真实后端、数据库、模型、CSS，并保存持久化验收标记。
-- 公开健康接口：`/api/health/`；只有 Vercel Production + PostgreSQL + 加密连接 + 数据库图片及模型齐全时，`cloud_ready` 才为 true。
-- 上传后可在 GitHub Actions 手动执行 Verify public Vercel deployment，填写正式网址；检查匿名访问、前端 CSS、后端、数据库和图片。
-- 必须关闭本机项目服务，用另一个设备访问正式域名、完成业务操作，再 Redeploy 核对数据保留。填写分组信息中的正式网址，截止 11 月 8 日。
-- 代码与压缩包不是公网验收证明；当前尚无真实部署网址。实际配置和验收请按下文指南执行。
-
 ## GitHub + Vercel 云端配置（2026-11-06）
 
-上传前请先阅读 [零终端部署指南](docs/VERCEL部署指南.md)。访问已部署的 HTTPS 地址即可，无需 Python 或终端。代码已适配，尚未代替项目所有者执行真实部署，不能把本地验证视为公网验收。
-
+上传前请先阅读 [零终端部署指南](docs/VERCEL部署指南.md)。访问已部署的 HTTPS 地址即可，无需 Python 或终端。
 - 本地继续使用 SQLite；Vercel 强制使用 `DATABASE_URL` 指定的 PostgreSQL，禁止临时 SQLite。
 - 在 Vercel 导入本仓库，Framework 选 Django，Python 3.12，构建命令 `python build.py`。
 - 在 Storage / Marketplace 创建并连接 PostgreSQL（如 Neon），只授予 Production 环境。
