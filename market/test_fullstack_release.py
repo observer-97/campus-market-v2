@@ -4,7 +4,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth import get_user_model
 from django.db import OperationalError
 from django.test import TestCase, SimpleTestCase, Client, override_settings
-from market.deployment import PROBE_NAME
+from market.deployment import PROBE_NAME, database_uses_tls
 from tools.verify_live import verify
 import build
 
@@ -41,7 +41,7 @@ class ReadinessTests(TestCase):
             self.client.force_login(user)
             self.assertEqual(self.client.get('/admin/deployment-check/').status_code, code)
         self.client.force_login(admin)
-        self.assertContains(self.client.get('/admin/deployment-check/'), '完整上线验收')
+        self.assertContains(self.client.get('/admin/deployment-check/'), '������������')
         self.assertFalse(LogEntry.objects.filter(object_repr=PROBE_NAME).exists())
         strict = Client(enforce_csrf_checks=True)
         strict.force_login(admin)
@@ -69,7 +69,7 @@ class ReleaseToolTests(SimpleTestCase):
                 return 200, 'text/css', b'body {color:black}'
             if '/uploads/' in url:
                 return 200, 'image/png', b'example-image'
-            return 200, 'text/html', '<title>青禾集</title><link href="/static/app.css"><img src="/uploads/sample.png/">'.encode()
+            return 200, 'text/html', '<title>��̼�</title><link href="/static/app.css"><img src="/uploads/sample.png/">'.encode()
         report = verify('https://campus-example.vercel.app', get)
         self.assertTrue(report['passed'])
         self.assertTrue(report['remaining_manual_checks'])
@@ -79,3 +79,25 @@ class ReleaseToolTests(SimpleTestCase):
             return (200, 'application/json', b'{"cloud_ready":false}') if url.endswith('/api/health/') else get(url)
         with self.assertRaises(ValueError):
             verify('https://campus-example.vercel.app', missing_backend)
+
+
+class DatabaseTlsTests(SimpleTestCase):
+    def test_pooler_uses_actual_client_tls_without_server_query(self):
+        from types import SimpleNamespace
+        with patch('market.deployment.connection') as db:
+            db.vendor = 'postgresql'
+            db.connection = SimpleNamespace(pgconn=SimpleNamespace(ssl_in_use=True))
+            db.cursor.side_effect = AssertionError('Do not query the pooler backend for client TLS')
+            self.assertTrue(database_uses_tls())
+            db.cursor.assert_not_called()
+
+    def test_plain_or_non_postgres_connection_is_not_encrypted(self):
+        from types import SimpleNamespace
+        with patch('market.deployment.connection') as db:
+            db.vendor = 'postgresql'
+            db.connection = SimpleNamespace(pgconn=SimpleNamespace(ssl_in_use=False))
+            self.assertFalse(database_uses_tls())
+            db.connection = None
+            self.assertFalse(database_uses_tls())
+            db.vendor = 'sqlite'
+            self.assertFalse(database_uses_tls())
