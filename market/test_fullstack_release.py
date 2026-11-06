@@ -41,7 +41,7 @@ class ReadinessTests(TestCase):
             self.client.force_login(user)
             self.assertEqual(self.client.get('/admin/deployment-check/').status_code, code)
         self.client.force_login(admin)
-        self.assertContains(self.client.get('/admin/deployment-check/'), '������������')
+        self.assertContains(self.client.get('/admin/deployment-check/'), '完整上线验收')
         self.assertFalse(LogEntry.objects.filter(object_repr=PROBE_NAME).exists())
         strict = Client(enforce_csrf_checks=True)
         strict.force_login(admin)
@@ -69,7 +69,7 @@ class ReleaseToolTests(SimpleTestCase):
                 return 200, 'text/css', b'body {color:black}'
             if '/uploads/' in url:
                 return 200, 'image/png', b'example-image'
-            return 200, 'text/html', '<title>��̼�</title><link href="/static/app.css"><img src="/uploads/sample.png/">'.encode()
+            return 200, 'text/html', '<title>青禾集</title><link href="/static/app.css"><img src="/uploads/sample.png/">'.encode()
         report = verify('https://campus-example.vercel.app', get)
         self.assertTrue(report['passed'])
         self.assertTrue(report['remaining_manual_checks'])

@@ -14,7 +14,7 @@ from .models import Product, StoredImage, CATEGORIES
 from .storage import DatabaseImageStorage
 
 RELEASE = '2026-11-06-fullstack-v2'
-PROBE_NAME = '���߳־û����ձ��'
+PROBE_NAME = '上线持久化验收标记'
 
 
 def database_uses_tls():
@@ -45,7 +45,7 @@ def readiness():
     checks['database_media'] = isinstance(default_storage, DatabaseImageStorage)
     checks['frontend_files'] = all((settings.BASE_DIR / 'templates' / name).is_file() for name in ['listing.html', 'base.html'])
     try:
-        category, _ = classify('��ë����', '������ѵ��ʹ�ã������ף��ߴ�����')
+        category, _ = classify('羽毛球拍', '体育课训练使用，附拍套，线床完整')
         checks['model'] = category in dict(CATEGORIES)
     except Exception:
         checks['model'] = False
@@ -69,19 +69,19 @@ def health(request):
 @require_http_methods(['GET', 'POST'])
 def deployment_check(request):
     if not request.user.is_superuser:
-        return HttpResponseForbidden('����������Ա�ɲ鿴�������ա�')
+        return HttpResponseForbidden('仅超级管理员可查看上线验收。')
     if request.method == 'POST':
         if request.POST.get('action') == 'save_probe':
             LogEntry.objects.create(user=request.user, object_repr=PROBE_NAME,
-                                    action_flag=CHANGE, change_message='���ձ�� ' + uuid.uuid4().hex[:16])
-            messages.success(request, '��д�����ݿ⡣����±�ǣ�����һ���������¼����Ա��˶ԣ����²����ҲӦ������')
+                                    action_flag=CHANGE, change_message='验收标记 ' + uuid.uuid4().hex[:16])
+            messages.success(request, '已写入数据库。请记下标记，在另一个浏览器登录管理员后核对；重新部署后也应保留。')
         return redirect('deployment_check')
     data = readiness()
-    labels = {'vercel_production': 'ǰ��������� Vercel Production', 'postgresql': 'ʹ�� PostgreSQL �־û����ݿ�',
-              'database': '��˿����������ݿ�', 'schema': '�˺š���Ʒ��˽�š����������ݿ������',
-              'database_tls': '���ݿ������Ѽ���', 'database_media': '�ϴ�ͼƬд�����ݿ�',
-              'model': '�����ģ�Ϳ���ʵ��Ԥ��', 'frontend_files': 'ǰ��ҳ��ģ������Ŀ����'}
+    labels = {'vercel_production': '前后端运行于 Vercel Production', 'postgresql': '使用 PostgreSQL 持久化数据库',
+              'database': '后端可以连接数据库', 'schema': '账号、商品、私信、订单等数据库表完整',
+              'database_tls': '数据库连接已加密', 'database_media': '上传图片写入数据库',
+              'model': '保存的模型可以实际预测', 'frontend_files': '前端页面模板随项目部署'}
     marker = LogEntry.objects.filter(object_repr=PROBE_NAME, content_type__isnull=True).order_by('-action_time', '-id').first()
     return render(request, 'admin/deployment_check.html', {
-        **admin.site.each_context(request), 'title': '������������', 'report': data,
+        **admin.site.each_context(request), 'title': '完整上线验收', 'report': data,
         'rows': [(labels[key], value) for key, value in data['checks'].items()], 'marker': marker})
