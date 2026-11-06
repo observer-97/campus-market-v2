@@ -1,5 +1,9 @@
 # 青禾集 校园二手交易平台
 
+**在线访问：[https://campus-market-v2-six.vercel.app](https://campus-market-v2-six.vercel.app)**
+
+管理后台：[进入后台](https://campus-market-v2-six.vercel.app/admin/)。普通访客无需登录 Vercel。
+
 面向明故宫、将军路和天目湖三个校区的二手交易网页应用，支持电脑和手机浏览器。使用 Django、PostgreSQL 和 scikit-learn，前端模板、后端接口、管理后台与分类模型部署在同一个 Vercel 项目。
 
 ## 功能
