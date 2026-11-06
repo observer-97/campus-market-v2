@@ -1,0 +1,10 @@
+{
+  "command": "train_model --data data/examples.csv (isolated output)",
+  "results_identical": true,
+  "splits": {
+    "train": 58,
+    "validation": 21,
+    "test": 18
+  },
+  "selected": "MultinomialNB"
+}

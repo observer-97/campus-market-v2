@@ -1,0 +1,40 @@
+name: Django and PostgreSQL checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: campus_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/campus_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python manage.py check
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py test market --verbosity 1
+      - name: First process writes isolated PostgreSQL data through real views
+        env:
+          CAMPUS_DATABASE_MEDIA: '1'
+        run: python tools/check_persistence.py write --state /tmp/campus-persistence.json
+      - name: Second process verifies sessions and persistent business data
+        env:
+          CAMPUS_DATABASE_MEDIA: '1'
+        run: python tools/check_persistence.py read --state /tmp/campus-persistence.json

@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="form-panel auth"><h1>举报商品</h1><h3>{{ product.title }}</h3><p>举报由管理员查看，举报人身份和说明不会公开给卖家。请提供具体问题，不填写无关个人隐私。</p><form method="post">{% csrf_token %}{{ form.as_p }}<button class="wide">提交举报</button></form><p><a href="{% url 'reports' %}">查看我的举报</a></p></section>{% endblock %}

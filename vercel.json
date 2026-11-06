@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "django",
+  "buildCommand": "python build.py",
+  "functions": {
+    "config/wsgi.py": {
+      "maxDuration": 60,
+      "excludeFiles": "{.packages*/**,.venv/**,docs/**,课程展示材料/**,交付包/**,output/**,tmp/**,media/**,tools/**,**/__pycache__/**,**/test*.py,WORKLOG.md,db.sqlite3}"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }} | 青禾集管理{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'admin:index' %}">青禾集 · 数据管理后台</a></div>{% if user.is_anonymous %}<p>仅限获得后台权限的管理员登录，普通注册账号不可访问。</p>{% endif %}{% endblock %}
+{% block extrastyle %}{{ block.super }}<style>:root,html[data-theme="light"]{--primary:#2f624b;--secondary:#243e35;--accent:#e8d9a4;--header-bg:#243e35;--link-fg:#2f624b;--button-bg:#2f624b;--default-button-bg:#243e35}#header{min-height:64px}#site-name a{font-weight:700}.login #header{padding:20px}.login #header p{font-size:12px;line-height:1.7;color:#e5eddf}</style>{% endblock %}
+
+{% block userlinks %}{% if user.is_superuser %}<a href="{% url 'deployment_check' %}">完整上线验收</a> / {% endif %}{{ block.super }}{% endblock %}

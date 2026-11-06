@@ -1,0 +1,25 @@
+name: Verify public Vercel deployment
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: '正式 https://项目名.vercel.app 地址'
+        required: true
+permissions:
+  contents: read
+jobs:
+  public-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check anonymous public access and backend readiness
+        env:
+          SITE_URL: ${{ inputs.site_url }}
+        run: python tools/verify_live.py --url "$SITE_URL" --output live-readiness.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-readiness-report
+          path: live-readiness.json

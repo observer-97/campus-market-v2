@@ -1,0 +1,16 @@
+{
+  "algorithm": "MultinomialNB",
+  "sha256": "0107f11328de8d23a318cf3980c4736ca123c69f395fba1d0a5e7f476de4f906",
+  "dataset_sha256": "1027ec26b8c89ff176829973dab96a36b4d04a5a708dffcbe7c87126310cf4f2",
+  "seed": 20261022,
+  "sklearn_version": "1.6.1",
+  "fitted_on": "train only; no refit on validation or test",
+  "features": "character TF-IDF (1,3), min_df=1, sublinear_tf=True",
+  "selection": "validation Macro-F1, then Accuracy; ties prefer NB",
+  "labels": {
+    "study": "学习用品",
+    "digital": "电子用品",
+    "sports": "体育用品",
+    "daily": "生活用品"
+  }
+}

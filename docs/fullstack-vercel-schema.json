@@ -1,0 +1,5 @@
+{
+  "schema": "https://openapi.vercel.sh/vercel.json",
+  "result": "config instance passed",
+  "scope": "按官方 Schema 校验配置实例；官方 Schema 的自身元模式校验不通过，未声称验证其完整规范。此检查不等于 Vercel 实际构建。"
+}

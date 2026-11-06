@@ -1,0 +1,2 @@
+# 老师清单所用单数文件名；标准 pip 入口为 requirements.txt
+-r requirements.txt

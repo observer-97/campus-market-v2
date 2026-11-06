@@ -1,0 +1,14 @@
+{
+  "scope": "当前项目对话，不含其他对话；不含快照之后的适配工作",
+  "period_start": "2026-10-22",
+  "cutoff_hong_kong": "2026-11-06T13:35:33+08:00",
+  "last_included_record_hong_kong": "2026-11-06T13:34:39+08:00",
+  "method": "271 条独立 token_usage_record usage 相加，与 thread_token_usage 一致；已实际读取日志核对",
+  "independent_responses": 271,
+  "input_tokens": 46880125,
+  "cached_input_tokens": 44790784,
+  "noncached_input_tokens": 2089341,
+  "output_tokens": 189502,
+  "total_tokens": 47069627,
+  "actual_cost": "待核实订阅或账单，不由 token 快照直接推算"
+}

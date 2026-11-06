@@ -1,0 +1,22 @@
+.venv/
+.packages/
+.packages312/
+__pycache__/
+*.pyc
+db.sqlite3
+media/
+.env
+
+.env.*
+!.env.example
+.vercel/
+staticfiles/
+output/
+tmp/
+交付包/
+*.sqlite3
+*.sqlite3-*
+*.log
+课程展示材料/_qa/
+PixPin_*.png
+新建 文本文档.txt

@@ -1,0 +1,31 @@
+<form class="market-search" method="get" role="search">
+  <div class="search-toolbar">
+    <div class="keyword-box">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+      <label class="sr-only" for="id_q">搜索商品关键词</label>{{ search_form.q }}
+    </div>
+    <button class="search-submit" type="submit">搜索</button>
+    <details class="filter-menu" {% if search_form.errors %}open{% endif %}>
+      <summary aria-label="商品筛选" title="打开或收起筛选条件">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--paper)"/><circle cx="15" cy="12" r="2" fill="var(--paper)"/><circle cx="9" cy="18" r="2" fill="var(--paper)"/></svg>
+        <span>筛选</span>{% if active_filters %}<span class="filter-count">{{ active_filters|length }}</span>{% endif %}
+      </summary>
+      <div class="filter-popover">
+        <div class="filter-heading"><strong>筛选商品</strong><small>选好后点击应用，再次点击图标可收起</small></div>
+        {{ search_form.non_field_errors }}
+        <div class="search-fields">
+          <div>{{ search_form.category.label_tag }}{{ search_form.category }}{{ search_form.category.errors }}</div>
+          <div>{{ search_form.campus.label_tag }}{{ search_form.campus }}{{ search_form.campus.errors }}</div>
+          <div>{{ search_form.sort.label_tag }}{{ search_form.sort }}{{ search_form.sort.errors }}</div>
+          <div>{{ search_form.min_price.label_tag }}{{ search_form.min_price }}{{ search_form.min_price.errors }}</div>
+          <div>{{ search_form.max_price.label_tag }}{{ search_form.max_price }}{{ search_form.max_price.errors }}</div>
+          <div>{{ search_form.start_date.label_tag }}{{ search_form.start_date }}{{ search_form.start_date.errors }}</div>
+          <div>{{ search_form.end_date.label_tag }}{{ search_form.end_date }}{{ search_form.end_date.errors }}</div>
+        </div>
+        <div class="search-actions"><button type="submit">应用筛选</button><a href="?q={{ request.GET.q|urlencode }}">清除筛选</a></div>
+      </div>
+    </details>
+  </div>
+  {{ search_form.q.errors }}
+  {% if active_filters %}<div class="applied-filters" aria-label="已应用的筛选条件"><span class="muted">已筛选</span>{% for label in active_filters %}<span class="filter-chip">{{ label }}</span>{% endfor %}<a href="?q={{ request.GET.q|urlencode }}">清除</a></div>{% endif %}
+</form>
